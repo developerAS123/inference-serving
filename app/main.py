@@ -58,8 +58,8 @@ DEFAULT_MODE = "pytorch-fp32"   # hardcoded today; becomes request.mode tomorrow
 def predict(request: PredictRequest):
     start = time.time()
     try:
-        label, confidence = manager.predict(request.text, DEFAULT_MODE)
+        label, confidence = manager.predict(request.text, request.mode)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     latency_ms = (time.time() - start) * 1000
-    return PredictResponse(label=label, confidence=confidence, latency_ms=latency_ms, mode=DEFAULT_MODE)
+    return PredictResponse(label=label, confidence=confidence, latency_ms=latency_ms, mode=request.mode)
