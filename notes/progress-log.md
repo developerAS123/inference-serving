@@ -1,0 +1,1 @@
+- Day 45: Capstone optimization layer - 3 backends, mode param, consistency verified
