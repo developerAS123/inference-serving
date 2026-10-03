@@ -5,3 +5,4 @@ models/*.onnx
 models/*.pt
 models/*.onnx
 models/*.json
+dashboard/*.json
