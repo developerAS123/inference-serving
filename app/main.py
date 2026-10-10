@@ -164,7 +164,17 @@ app = FastAPI(
     title="Inference Optimization & Serving Service",
     lifespan=lifespan,
 )
+from pathlib import Path
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
+STATIC_DIR = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    return FileResponse(STATIC_DIR / "index.html")
 
 # ============================================================
 # Request Logging Middleware

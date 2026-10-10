@@ -1,0 +1,137 @@
+[
+  {
+    "mode": "pytorch-fp32",
+    "n_concurrent": 1,
+    "requests_per_sec": 0.4823299933003079,
+    "success_rate": 1.0,
+    "mean_latency_ms": 2073.172092437744,
+    "p50_latency_ms": 2073.172092437744,
+    "p99_latency_ms": 2073.172092437744
+  },
+  {
+    "mode": "pytorch-fp32",
+    "n_concurrent": 4,
+    "requests_per_sec": 32.425630935860816,
+    "success_rate": 1.0,
+    "mean_latency_ms": 113.92718553543091,
+    "p50_latency_ms": 120.91898918151855,
+    "p99_latency_ms": 122.84043073654175
+  },
+  {
+    "mode": "pytorch-fp32",
+    "n_concurrent": 8,
+    "requests_per_sec": 31.840157898732254,
+    "success_rate": 1.0,
+    "mean_latency_ms": 236.08309030532837,
+    "p50_latency_ms": 240.4559850692749,
+    "p99_latency_ms": 250.3603959083557
+  },
+  {
+    "mode": "pytorch-fp32",
+    "n_concurrent": 16,
+    "requests_per_sec": 32.2581697084362,
+    "success_rate": 1.0,
+    "mean_latency_ms": 473.5197573900223,
+    "p50_latency_ms": 479.6710014343262,
+    "p99_latency_ms": 494.70317363739014
+  },
+  {
+    "mode": "pytorch-fp32",
+    "n_concurrent": 32,
+    "requests_per_sec": 30.376812381419903,
+    "success_rate": 1.0,
+    "mean_latency_ms": 1015.5190229415894,
+    "p50_latency_ms": 1034.4771146774292,
+    "p99_latency_ms": 1051.2824845314026
+  },
+  {
+    "mode": "onnx-fp32",
+    "n_concurrent": 1,
+    "requests_per_sec": 20.098058382688365,
+    "success_rate": 1.0,
+    "mean_latency_ms": 49.66402053833008,
+    "p50_latency_ms": 49.66402053833008,
+    "p99_latency_ms": 49.66402053833008
+  },
+  {
+    "mode": "onnx-fp32",
+    "n_concurrent": 4,
+    "requests_per_sec": 55.59861610042551,
+    "success_rate": 1.0,
+    "mean_latency_ms": 64.30703401565552,
+    "p50_latency_ms": 65.04702568054199,
+    "p99_latency_ms": 71.70502662658691
+  },
+  {
+    "mode": "onnx-fp32",
+    "n_concurrent": 8,
+    "requests_per_sec": 71.95210402621241,
+    "success_rate": 1.0,
+    "mean_latency_ms": 104.81548309326172,
+    "p50_latency_ms": 107.84077644348145,
+    "p99_latency_ms": 110.6906008720398
+  },
+  {
+    "mode": "onnx-fp32",
+    "n_concurrent": 16,
+    "requests_per_sec": 68.27597349085264,
+    "success_rate": 1.0,
+    "mean_latency_ms": 192.83156096935272,
+    "p50_latency_ms": 200.2624273300171,
+    "p99_latency_ms": 232.3202133178711
+  },
+  {
+    "mode": "onnx-fp32",
+    "n_concurrent": 32,
+    "requests_per_sec": 76.44031551670132,
+    "success_rate": 1.0,
+    "mean_latency_ms": 332.6057121157646,
+    "p50_latency_ms": 348.4082221984863,
+    "p99_latency_ms": 416.4889335632324
+  },
+  {
+    "mode": "onnx-int8",
+    "n_concurrent": 1,
+    "requests_per_sec": 34.57651374634187,
+    "success_rate": 1.0,
+    "mean_latency_ms": 28.84054183959961,
+    "p50_latency_ms": 28.84054183959961,
+    "p99_latency_ms": 28.84054183959961
+  },
+  {
+    "mode": "onnx-int8",
+    "n_concurrent": 4,
+    "requests_per_sec": 60.24632554932723,
+    "success_rate": 1.0,
+    "mean_latency_ms": 54.53324317932129,
+    "p50_latency_ms": 56.97274208068848,
+    "p99_latency_ms": 66.22035503387451
+  },
+  {
+    "mode": "onnx-int8",
+    "n_concurrent": 8,
+    "requests_per_sec": 110.84093206397864,
+    "success_rate": 1.0,
+    "mean_latency_ms": 66.84592366218567,
+    "p50_latency_ms": 65.41657447814941,
+    "p99_latency_ms": 71.61834001541138
+  },
+  {
+    "mode": "onnx-int8",
+    "n_concurrent": 16,
+    "requests_per_sec": 144.69946806790273,
+    "success_rate": 1.0,
+    "mean_latency_ms": 93.46428513526917,
+    "p50_latency_ms": 99.5713472366333,
+    "p99_latency_ms": 109.501051902771
+  },
+  {
+    "mode": "onnx-int8",
+    "n_concurrent": 32,
+    "requests_per_sec": 156.27464377114725,
+    "success_rate": 1.0,
+    "mean_latency_ms": 166.56185686588287,
+    "p50_latency_ms": 170.93312740325928,
+    "p99_latency_ms": 203.5016679763794
+  }
+]

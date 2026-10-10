@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inference Optimization & Serving Service</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; color: #1f2933; }
+  h1 { font-size: 1.5rem; margin-bottom: .25rem; }
+  p.sub { color: #52606d; margin-top: 0; }
+  textarea { width: 100%; height: 90px; padding: .6rem; font-size: 1rem; box-sizing: border-box; }
+  select, button { padding: .5rem .9rem; font-size: 1rem; margin-top: .6rem; margin-right: .4rem; }
+  button { cursor: pointer; background: #1f6feb; color: white; border: none; border-radius: 6px; }
+  button.secondary { background: #3e4c59; }
+  button:disabled { opacity: .5; cursor: wait; }
+  table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+  th, td { border: 1px solid #cbd2d9; padding: .45rem .6rem; text-align: left; }
+  th { background: #f0f4f8; }
+  tr.fastest td { background: #e3f9e5; font-weight: 600; }
+  .card { margin-top: 1rem; padding: 1rem; border: 1px solid #cbd2d9; border-radius: 8px; }
+  img { max-width: 100%; margin-top: .5rem; }
+  .muted { color: #7b8794; font-size: .9rem; }
+</style>
+</head>
+<body>
+  <h1>Inference Optimization & Serving Service</h1>
+  <p class="sub">A sentiment classifier served through three backends: PyTorch-FP32, ONNX-FP32, ONNX-INT8.</p>
+
+  <textarea id="text">This capstone project turned out far better than I expected.</textarea>
+  <div>
+    <select id="mode">
+      <option value="pytorch-fp32">pytorch-fp32</option>
+      <option value="onnx-fp32">onnx-fp32</option>
+      <option value="onnx-int8">onnx-int8</option>
+    </select>
+    <button id="analyze">Analyze</button>
+    <button id="compare" class="secondary">Compare all 3 modes (10 runs each)</button>
+  </div>
+
+  <div id="single" class="card" style="display:none"></div>
+  <div id="compareOut" style="display:none"></div>
+
+  <div class="card" id="chartCard">
+    <strong>Load-test results</strong>
+    <span class="muted">(measured locally on the developer's laptop CPU, not on this server)</span><br>
+    <img src="/static/load_test_chart.png" alt="Load test results"
+         onerror="document.getElementById('chartCard').style.display='none'">
+  </div>
+
+  <p class="muted">API docs: <a href="/docs">/docs</a> · Metrics: <a href="/metrics">/metrics</a> · Health: <a href="/health">/health</a></p>
+
+<script>
+async function predict(text, mode) {
+  const res = await fetch("/predict", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({text, mode})
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+const median = arr => {
+  const s = [...arr].sort((a, b) => a - b), m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
+document.getElementById("analyze").onclick = async () => {
+  const text = document.getElementById("text").value;
+  const mode = document.getElementById("mode").value;
+  const out = document.getElementById("single");
+  out.style.display = "block"; out.textContent = "Running...";
+  try {
+    const t0 = performance.now();
+    const r = await predict(text, mode);
+    const rtt = performance.now() - t0;
+    out.innerHTML = `<strong>${r.label}</strong> (confidence ${(r.confidence * 100).toFixed(1)}%)<br>
+      <span class="muted">mode: ${r.mode} · server latency: ${r.latency_ms.toFixed(1)} ms · round trip: ${rtt.toFixed(0)} ms</span>`;
+  } catch (e) { out.textContent = "Error: " + e.message; }
+};
+
+document.getElementById("compare").onclick = async (ev) => {
+  const btn = ev.target; btn.disabled = true;
+  const text = document.getElementById("text").value;
+  const modes = ["pytorch-fp32", "onnx-fp32", "onnx-int8"];
+  const out = document.getElementById("compareOut");
+  out.style.display = "block";
+  out.innerHTML = "<p>Running 1 warm-up + 10 timed requests per mode, one at a time...</p>";
+  try {
+    const rows = [];
+    for (const mode of modes) {
+      await predict(text, mode);                       // warm-up, not counted
+      const lat = []; let last;
+      for (let i = 0; i < 10; i++) { last = await predict(text, mode); lat.push(last.latency_ms); }
+      rows.push({mode, label: last.label, conf: last.confidence, med: median(lat)});
+    }
+    const fastest = Math.min(...rows.map(r => r.med));
+    out.innerHTML = `<table><tr><th>Mode</th><th>Prediction</th><th>Confidence</th><th>Median server latency (ms)</th></tr>` +
+      rows.map(r => `<tr class="${r.med === fastest ? 'fastest' : ''}"><td>${r.mode}</td><td>${r.label}</td>
+        <td>${(r.conf * 100).toFixed(1)}%</td><td>${r.med.toFixed(1)}</td></tr>`).join("") +
+      `</table><p class="muted">Requests run one at a time so they don't compete for CPU. Green row = lowest median latency.</p>`;
+  } catch (e) { out.textContent = "Error: " + e.message; }
+  btn.disabled = false;
+};
+</script>
+</body>
+</html>
